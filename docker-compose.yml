@@ -1,0 +1,374 @@
+# Local development stack. Do not expose this file directly as a production
+# deployment profile; production must inject secrets and run behind TLS/WAF.
+services:
+  # ==================== DATABASE ====================
+  postgres:
+    container_name: awa-postgres
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: postgres
+    volumes:
+      - ./backend/db/sql/supabase_complete.sql:/docker-entrypoint-initdb.d/000_base_schema.sql
+      - ./backend/db/sql/docker_run_migrations.sql:/docker-entrypoint-initdb.d/001_run_migrations.sql
+      - ./backend/db/sql/migrations:/docker-entrypoint-initdb.d/migrations:ro
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - awa-network
+
+  # ==================== REDIS ====================
+  redis:
+    container_name: awa-redis
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+    command: [ "sh", "-c", "echo \"requirepass $${REDIS_PASSWORD}\" > /tmp/redis.conf && exec redis-server /tmp/redis.conf" ]
+    # Localhost-only host access; containers use the internal redis service name.
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" ping | grep PONG" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - awa-network
+
+  # ==================== BACKEND API ====================
+  api:
+    container_name: awa-api
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - ENV=docker
+      - LOG_LEVEL=INFO
+      - AWA_INTEGRATION_MODE=${AWA_INTEGRATION_MODE:-test}
+      - AUTH_MODE=${AUTH_MODE:-postgres}
+      - WHATSAPP_MODE=${WHATSAPP_MODE:-test}
+      - BILLING_MODE=${BILLING_MODE:-test}
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/postgres
+      - REDIS_URL=redis://:${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}@redis:6379/0
+      - JWT_SECRET=${JWT_SECRET:-}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-15}
+      - REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS:-30}
+      - ENABLE_MOCK_AUTH=${ENABLE_MOCK_AUTH:-false}
+      - ENABLE_MOCK_SUPER_ADMIN=${ENABLE_MOCK_SUPER_ADMIN:-false}
+      - ENABLE_WEBHOOK_SIGNATURE_BYPASS=${ENABLE_WEBHOOK_SIGNATURE_BYPASS:-false}
+      - ENABLE_MOCK_BILLING=${ENABLE_MOCK_BILLING:-false}
+      - ENABLE_MOCK_WHATSAPP_SIGNUP=${ENABLE_MOCK_WHATSAPP_SIGNUP:-false}
+      - WHATSAPP_API_TOKEN=${WHATSAPP_API_TOKEN:-}
+      - WHATSAPP_VERIFY_TOKEN=${WHATSAPP_VERIFY_TOKEN:-}
+      - WHATSAPP_APP_SECRET=${WHATSAPP_APP_SECRET:-}
+      - WHATSAPP_PHONE_NUMBER_ID=${WHATSAPP_PHONE_NUMBER_ID:-}
+      - WHATSAPP_GRAPH_API_VERSION=${WHATSAPP_GRAPH_API_VERSION:-v21.0}
+      - WHATSAPP_TOKEN_ENCRYPTION_KEY=${WHATSAPP_TOKEN_ENCRYPTION_KEY:-}
+      - AWA_PUBLIC_CHAT_BASE_URL=${AWA_PUBLIC_CHAT_BASE_URL:-http://localhost:5173}
+      - PUBLIC_CHAT_LINK_SECRET=${PUBLIC_CHAT_LINK_SECRET:?Set PUBLIC_CHAT_LINK_SECRET in .env}
+      - PUBLIC_CHAT_SESSION_SECRET=${PUBLIC_CHAT_SESSION_SECRET:?Set PUBLIC_CHAT_SESSION_SECRET in .env}
+      - PUBLIC_CHAT_RATE_LIMIT=${PUBLIC_CHAT_RATE_LIMIT:-30}
+      - FACEBOOK_APP_ID=${FACEBOOK_APP_ID:-}
+      - FACEBOOK_APP_SECRET=${FACEBOOK_APP_SECRET:-}
+      - FACEBOOK_CONFIG_ID=${FACEBOOK_CONFIG_ID:-}
+      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID:-}
+      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET:-}
+      - RAZORPAY_WEBHOOK_SECRET=${RAZORPAY_WEBHOOK_SECRET:-}
+      - ROUTING_LLM_PROVIDER=${ROUTING_LLM_PROVIDER:-groq}
+      - ROUTING_LLM_MODEL=${ROUTING_LLM_MODEL:-llama3-8b-8192}
+      - AGENT_LLM_PROVIDER=${AGENT_LLM_PROVIDER:-groq}
+      - AGENT_LLM_MODEL=${AGENT_LLM_MODEL:-llama3-70b-8192}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - ENABLE_LOCAL_SIMULATION_DIAGNOSTICS=${ENABLE_LOCAL_SIMULATION_DIAGNOSTICS:-false}
+      - ENABLE_PROVIDER_RATE_LIMITER=${ENABLE_PROVIDER_RATE_LIMITER:-false}
+      - PROVIDER_RATE_LIMIT_FAIL_OPEN=${PROVIDER_RATE_LIMIT_FAIL_OPEN:-false}
+      - PROVIDER_RATE_LIMIT_MAX_WAIT_MS=${PROVIDER_RATE_LIMIT_MAX_WAIT_MS:-15000}
+      - PROVIDER_GEMINI_RPM_LIMIT=${PROVIDER_GEMINI_RPM_LIMIT:-15}
+      - PROVIDER_GEMINI_TPM_LIMIT=${PROVIDER_GEMINI_TPM_LIMIT:-1000000}
+      - PROVIDER_OPENAI_RPM_LIMIT=${PROVIDER_OPENAI_RPM_LIMIT:-60}
+      - PROVIDER_OPENAI_TPM_LIMIT=${PROVIDER_OPENAI_TPM_LIMIT:-90000}
+      - PROVIDER_GROQ_RPM_LIMIT=${PROVIDER_GROQ_RPM_LIMIT:-30}
+      - PROVIDER_GROQ_TPM_LIMIT=${PROVIDER_GROQ_TPM_LIMIT:-6000}
+      - PROVIDER_OLLAMA_RPM_LIMIT=${PROVIDER_OLLAMA_RPM_LIMIT:-999999}
+      - PROVIDER_OLLAMA_TPM_LIMIT=${PROVIDER_OLLAMA_TPM_LIMIT:-999999}
+      - ENABLE_WORKER_SESSION_LOCKS=${ENABLE_WORKER_SESSION_LOCKS:-true}
+      - WORKER_SESSION_LOCK_TTL_MS=${WORKER_SESSION_LOCK_TTL_MS:-120000}
+      - WORKER_SESSION_LOCK_MAX_WAIT_MS=${WORKER_SESSION_LOCK_MAX_WAIT_MS:-15000}
+      - WORKER_SESSION_LOCK_RENEW_INTERVAL_MS=${WORKER_SESSION_LOCK_RENEW_INTERVAL_MS:-30000}
+      - WORKER_SESSION_LOCK_FAIL_OPEN=${WORKER_SESSION_LOCK_FAIL_OPEN:-false}
+      - WORKER_CONCURRENCY_MODE=${WORKER_CONCURRENCY_MODE:-sequential}
+      - WORKER_TASK_POOL_SIZE=${WORKER_TASK_POOL_SIZE:-1}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - awa-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/api/v1/health').raise_for_status()" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # ==================== WORKER ====================
+  worker:
+    # container_name: awa-worker
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: [ "python", "-m", "backend.pipeline.worker" ]
+    restart: unless-stopped
+    environment:
+      - ENV=docker
+      - LOG_LEVEL=INFO
+      - AWA_INTEGRATION_MODE=${AWA_INTEGRATION_MODE:-test}
+      - AUTH_MODE=${AUTH_MODE:-postgres}
+      - WHATSAPP_MODE=${WHATSAPP_MODE:-test}
+      - BILLING_MODE=${BILLING_MODE:-test}
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/postgres
+      - REDIS_URL=redis://:${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}@redis:6379/0
+      - JWT_SECRET=${JWT_SECRET:-}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-15}
+      - REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS:-30}
+      - ENABLE_MOCK_AUTH=${ENABLE_MOCK_AUTH:-false}
+      - ENABLE_MOCK_SUPER_ADMIN=${ENABLE_MOCK_SUPER_ADMIN:-false}
+      - ENABLE_WEBHOOK_SIGNATURE_BYPASS=${ENABLE_WEBHOOK_SIGNATURE_BYPASS:-false}
+      - ENABLE_MOCK_BILLING=${ENABLE_MOCK_BILLING:-false}
+      - ENABLE_MOCK_WHATSAPP_SIGNUP=${ENABLE_MOCK_WHATSAPP_SIGNUP:-false}
+      - WHATSAPP_API_TOKEN=${WHATSAPP_API_TOKEN:-}
+      - WHATSAPP_PHONE_NUMBER_ID=${WHATSAPP_PHONE_NUMBER_ID:-}
+      - WHATSAPP_GRAPH_API_VERSION=${WHATSAPP_GRAPH_API_VERSION:-v21.0}
+      - WHATSAPP_TOKEN_ENCRYPTION_KEY=${WHATSAPP_TOKEN_ENCRYPTION_KEY:-}
+      - AWA_PUBLIC_CHAT_BASE_URL=${AWA_PUBLIC_CHAT_BASE_URL:-http://localhost:5173}
+      - PUBLIC_CHAT_LINK_SECRET=${PUBLIC_CHAT_LINK_SECRET:?Set PUBLIC_CHAT_LINK_SECRET in .env}
+      - PUBLIC_CHAT_SESSION_SECRET=${PUBLIC_CHAT_SESSION_SECRET:?Set PUBLIC_CHAT_SESSION_SECRET in .env}
+      - PUBLIC_CHAT_RATE_LIMIT=${PUBLIC_CHAT_RATE_LIMIT:-30}
+      - ROUTING_LLM_PROVIDER=${ROUTING_LLM_PROVIDER:-groq}
+      - ROUTING_LLM_MODEL=${ROUTING_LLM_MODEL:-llama3-8b-8192}
+      - AGENT_LLM_PROVIDER=${AGENT_LLM_PROVIDER:-groq}
+      - AGENT_LLM_MODEL=${AGENT_LLM_MODEL:-llama3-70b-8192}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - ENABLE_LOCAL_SIMULATION_DIAGNOSTICS=${ENABLE_LOCAL_SIMULATION_DIAGNOSTICS:-false}
+      - ENABLE_PROVIDER_RATE_LIMITER=${ENABLE_PROVIDER_RATE_LIMITER:-false}
+      - PROVIDER_RATE_LIMIT_FAIL_OPEN=${PROVIDER_RATE_LIMIT_FAIL_OPEN:-false}
+      - PROVIDER_RATE_LIMIT_MAX_WAIT_MS=${PROVIDER_RATE_LIMIT_MAX_WAIT_MS:-15000}
+      - PROVIDER_GEMINI_RPM_LIMIT=${PROVIDER_GEMINI_RPM_LIMIT:-15}
+      - PROVIDER_GEMINI_TPM_LIMIT=${PROVIDER_GEMINI_TPM_LIMIT:-1000000}
+      - PROVIDER_OPENAI_RPM_LIMIT=${PROVIDER_OPENAI_RPM_LIMIT:-60}
+      - PROVIDER_OPENAI_TPM_LIMIT=${PROVIDER_OPENAI_TPM_LIMIT:-90000}
+      - PROVIDER_GROQ_RPM_LIMIT=${PROVIDER_GROQ_RPM_LIMIT:-30}
+      - PROVIDER_GROQ_TPM_LIMIT=${PROVIDER_GROQ_TPM_LIMIT:-6000}
+      - PROVIDER_OLLAMA_RPM_LIMIT=${PROVIDER_OLLAMA_RPM_LIMIT:-999999}
+      - PROVIDER_OLLAMA_TPM_LIMIT=${PROVIDER_OLLAMA_TPM_LIMIT:-999999}
+      - ENABLE_WORKER_SESSION_LOCKS=${ENABLE_WORKER_SESSION_LOCKS:-true}
+      - WORKER_SESSION_LOCK_TTL_MS=${WORKER_SESSION_LOCK_TTL_MS:-120000}
+      - WORKER_SESSION_LOCK_MAX_WAIT_MS=${WORKER_SESSION_LOCK_MAX_WAIT_MS:-15000}
+      - WORKER_SESSION_LOCK_RENEW_INTERVAL_MS=${WORKER_SESSION_LOCK_RENEW_INTERVAL_MS:-30000}
+      - WORKER_SESSION_LOCK_FAIL_OPEN=${WORKER_SESSION_LOCK_FAIL_OPEN:-false}
+      - WORKER_CONCURRENCY_MODE=${WORKER_CONCURRENCY_MODE:-sequential}
+      - WORKER_TASK_POOL_SIZE=${WORKER_TASK_POOL_SIZE:-1}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_started
+    networks:
+      - awa-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ==================== BURST WORKER (Phase 9c) ====================
+  burst-worker:
+    container_name: awa-burst-worker
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: [ "python", "-m", "backend.pipeline.burst_worker" ]
+    restart: unless-stopped
+    environment:
+      - ENV=docker
+      - LOG_LEVEL=INFO
+      - AWA_INTEGRATION_MODE=${AWA_INTEGRATION_MODE:-test}
+      - AUTH_MODE=${AUTH_MODE:-postgres}
+      - WHATSAPP_MODE=${WHATSAPP_MODE:-test}
+      - BILLING_MODE=${BILLING_MODE:-test}
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/postgres
+      - REDIS_URL=redis://:${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}@redis:6379/0
+      - JWT_SECRET=${JWT_SECRET:-}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - ENABLE_MOCK_AUTH=${ENABLE_MOCK_AUTH:-false}
+      - ENABLE_MOCK_SUPER_ADMIN=${ENABLE_MOCK_SUPER_ADMIN:-false}
+      - ENABLE_WEBHOOK_SIGNATURE_BYPASS=${ENABLE_WEBHOOK_SIGNATURE_BYPASS:-false}
+      - ENABLE_MOCK_BILLING=${ENABLE_MOCK_BILLING:-false}
+      - ENABLE_MOCK_WHATSAPP_SIGNUP=${ENABLE_MOCK_WHATSAPP_SIGNUP:-false}
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - awa-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ==================== REMINDER SCHEDULER ====================
+  reminder-scheduler:
+    container_name: awa-reminder-scheduler
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: [ "python", "-m", "backend.pipeline.reminder_scheduler" ]
+    restart: unless-stopped
+    environment:
+      - ENV=docker
+      - LOG_LEVEL=INFO
+      - AWA_INTEGRATION_MODE=${AWA_INTEGRATION_MODE:-test}
+      - AUTH_MODE=${AUTH_MODE:-postgres}
+      - WHATSAPP_MODE=${WHATSAPP_MODE:-test}
+      - BILLING_MODE=${BILLING_MODE:-test}
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/postgres
+      - REDIS_URL=redis://:${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}@redis:6379/0
+      - JWT_SECRET=${JWT_SECRET:-}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - ENABLE_MOCK_AUTH=${ENABLE_MOCK_AUTH:-false}
+      - ENABLE_MOCK_SUPER_ADMIN=${ENABLE_MOCK_SUPER_ADMIN:-false}
+      - ENABLE_WEBHOOK_SIGNATURE_BYPASS=${ENABLE_WEBHOOK_SIGNATURE_BYPASS:-false}
+      - ENABLE_MOCK_BILLING=${ENABLE_MOCK_BILLING:-false}
+      - ENABLE_MOCK_WHATSAPP_SIGNUP=${ENABLE_MOCK_WHATSAPP_SIGNUP:-false}
+      - WHATSAPP_API_TOKEN=${WHATSAPP_API_TOKEN:-}
+      - WHATSAPP_PHONE_NUMBER_ID=${WHATSAPP_PHONE_NUMBER_ID:-}
+      - WHATSAPP_GRAPH_API_VERSION=${WHATSAPP_GRAPH_API_VERSION:-v21.0}
+      - WHATSAPP_TOKEN_ENCRYPTION_KEY=${WHATSAPP_TOKEN_ENCRYPTION_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - awa-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ==================== EVENT DISPATCHER ====================
+  event-dispatcher:
+    container_name: awa-event-dispatcher
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: [ "python", "-m", "backend.pipeline.event_dispatcher" ]
+    restart: unless-stopped
+    environment:
+      - ENV=docker
+      - LOG_LEVEL=INFO
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/postgres
+      - REDIS_URL=redis://:${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}@redis:6379/0
+      # Include necessary flags for DB/Event initialization mode
+      - AWA_INTEGRATION_MODE=${AWA_INTEGRATION_MODE:-test}
+      - AUTH_MODE=${AUTH_MODE:-postgres}
+      - ENABLE_MOCK_AUTH=${ENABLE_MOCK_AUTH:-false}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - awa-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+  # ==================== FRONTEND ====================
+  frontend:
+    container_name: awa-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_FACEBOOK_APP_ID=${VITE_FACEBOOK_APP_ID:-1266045455687981}
+        - VITE_FACEBOOK_CONFIG_ID=${VITE_FACEBOOK_CONFIG_ID:-2696495780724483}
+        - VITE_FACEBOOK_GRAPH_VERSION=${VITE_FACEBOOK_GRAPH_VERSION:-v21.0}
+        - VITE_WHATSAPP_SIGNUP_VIDEO_URL=${VITE_WHATSAPP_SIGNUP_VIDEO_URL:-https://www.youtube-nocookie.com/embed/2Y6IGrhNi40}
+        - VITE_AWA_INTEGRATION_MODE=${AWA_INTEGRATION_MODE:-test}
+        - VITE_WHATSAPP_MODE=${WHATSAPP_MODE:-test}
+        - VITE_ENABLE_MOCK_AUTH=${VITE_ENABLE_MOCK_AUTH:-false}
+        - VITE_ENABLE_MOCK_WHATSAPP_SIGNUP=${VITE_ENABLE_MOCK_WHATSAPP_SIGNUP:-false}
+        - VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY:-}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5173:80"
+    depends_on:
+      - api
+    networks:
+      - awa-network
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+networks:
+  awa-network:
+    driver: bridge
+
+volumes:
+  db-data:
+  redis-data:

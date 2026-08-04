@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  :root {
+    --background: 210 20% 99%;
+    --foreground: 222 22% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 222 22% 8%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 210 14% 95%;
+    --secondary-foreground: 222 22% 8%;
+    --muted: 210 14% 95%;
+    --muted-foreground: 220 9% 43%;
+    --accent: 184 42% 92%;
+    --accent-foreground: 188 76% 18%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 214 16% 88%;
+    --input: 214 16% 88%;
+    --ring: 188 82% 36%;
+    --radius: 0.5rem;
+    --chart-1: 188 82% 36%;
+    --chart-2: 142 55% 39%;
+    --chart-3: 28 84% 52%;
+    --chart-4: 248 52% 58%;
+    --chart-5: 345 68% 52%;
+
+    /* Semantic color tokens */
+    --success: 142 72% 29%;
+    --success-foreground: 142 70% 95%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 90% 10%;
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 98%;
+    --info: 199 89% 48%;
+    --info-foreground: 199 90% 98%;
+
+    /* Text Scale Factor */
+    --text-scale-factor: 1;
+  }
+  .dark {
+    --background: 0 0% 3.9%;        /* #0a0a0a - true near-black */
+    --foreground: 0 0% 93%;          /* #ededed */
+    --card: 0 0% 5.5%;              /* #0e0e0e */
+    --card-foreground: 0 0% 93%;
+    --popover: 0 0% 5.5%;
+    --popover-foreground: 0 0% 93%;
+    --primary: 0 0% 93%;             /* white-ish for buttons */
+    --primary-foreground: 0 0% 5%;
+    --secondary: 0 0% 10%;           /* #1a1a1a */
+    --secondary-foreground: 0 0% 93%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 45%;    /* #737373 */
+    --accent: 0 0% 10%;
+    --accent-foreground: 0 0% 93%;
+    --destructive: 0 62% 54%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 12%;              /* #1f1f1f - barely visible */
+    --input: 0 0% 12%;
+    --ring: 0 0% 93%;
+    --chart-1: 188 82% 46%;
+    --chart-2: 142 55% 48%;
+    --chart-3: 28 84% 58%;
+    --chart-4: 248 52% 68%;
+    --chart-5: 345 68% 62%;
+
+    /* Semantic color tokens */
+    --success: 142 70% 45%;
+    --success-foreground: 142 70% 5%;
+    --warning: 38 90% 55%;
+    --warning-foreground: 38 90% 10%;
+    --danger: 0 62% 54%;
+    --danger-foreground: 0 0% 98%;
+    --info: 199 89% 58%;
+    --info-foreground: 199 90% 10%;
+  }
+  .a11y-high-contrast {
+    --background: 210 20% 100%;
+    --foreground: 222 28% 6%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 28% 6%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 28% 6%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 222 18% 26%;
+    --secondary: 210 20% 93%;
+    --secondary-foreground: 222 28% 6%;
+    --accent: 188 52% 88%;
+    --accent-foreground: 188 84% 12%;
+    --border: 214 18% 72%;
+    --input: 214 18% 72%;
+    --ring: 188 86% 28%;
+
+    /* Semantic color tokens */
+    --success: 142 75% 25%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 95% 45%;
+    --warning-foreground: 0 0% 0%;
+    --danger: 0 90% 50%;
+    --danger-foreground: 0 0% 100%;
+    --info: 199 95% 40%;
+    --info-foreground: 0 0% 100%;
+  }
+  .dark.a11y-high-contrast {
+    --background: 0 0% 2%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 98%;
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 74%;
+    --secondary: 0 0% 13%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 98%;
+    --border: 0 0% 28%;
+    --input: 0 0% 28%;
+    --ring: 188 82% 58%;
+
+    /* Semantic color tokens */
+    --success: 142 75% 55%;
+    --success-foreground: 0 0% 0%;
+    --warning: 38 95% 60%;
+    --warning-foreground: 0 0% 0%;
+    --danger: 0 80% 60%;
+    --danger-foreground: 0 0% 100%;
+    --info: 199 95% 65%;
+    --info-foreground: 0 0% 0%;
+  }
+}
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: calc(1rem * var(--text-scale-factor));
+    letter-spacing: 0;
+    text-rendering: optimizeLegibility;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+  /* Scrollbar - barely there */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: hsl(0 0% 18%); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(0 0% 25%); }
+  ::selection {
+    background: hsl(0 0% 25%);
+    color: white;
+  }
+}
+@layer utilities {
+  .motion-page {
+    animation: awa-page-in 180ms ease-out both;
+  }
+  .motion-enter {
+    animation: awa-fade-up 180ms ease-out both;
+  }
+  .motion-soft {
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .motion-soft:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px -10px rgba(16, 185, 129, 0.15);
+    border-color: hsl(var(--border) / 0.8);
+  }
+  .motion-nav-item {
+    transition:
+      background-color 140ms ease-out,
+      color 140ms ease-out,
+      transform 140ms ease-out;
+  }
+  .motion-nav-item:hover {
+    transform: translateX(1px);
+  }
+  .motion-button-press {
+    transition:
+      background-color 150ms ease-out,
+      border-color 150ms ease-out,
+      box-shadow 150ms ease-out,
+      color 150ms ease-out,
+      transform 150ms ease-out;
+  }
+  .motion-button-press:not(:disabled):active {
+    transform: scale(0.985);
+  }
+  .motion-splash-mark {
+    animation: awa-scale-in 180ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes awa-page-in {
+    from {
+      opacity: 0.92;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes awa-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes awa-scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes awa-typing-bounce {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    30% {
+      transform: translateY(-4px);
+      opacity: 1;
+    }
+  }
+  .typing-dot {
+    animation: awa-typing-bounce 1s ease-in-out infinite;
+  }
+  .a11y-reduced-motion,
+  .a11y-reduced-motion * {
+    scroll-behavior: auto !important;
+  }
+  .a11y-reduced-motion *,
+  .a11y-reduced-motion *::before,
+  .a11y-reduced-motion *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .a11y-text-large {
+    --text-scale-factor: 1.07;
+  }
+  .text-\[11px\] {
+    font-size: calc(11px * var(--text-scale-factor));
+    line-height: calc(1.25rem * var(--text-scale-factor));
+  }
+  .text-\[12px\] {
+    font-size: calc(12px * var(--text-scale-factor));
+    line-height: calc(1.35rem * var(--text-scale-factor));
+  }
+  .text-\[13px\] {
+    font-size: calc(13px * var(--text-scale-factor));
+    line-height: calc(1.4rem * var(--text-scale-factor));
+  }
+  .text-\[14px\] {
+    font-size: calc(14px * var(--text-scale-factor));
+    line-height: calc(1.5rem * var(--text-scale-factor));
+  }
+  .a11y-comfortable main {
+    line-height: 1.62;
+  }
+  .a11y-comfortable button,
+  .a11y-comfortable input,
+  .a11y-comfortable select {
+    min-height: 2.25rem;
+  }
+  .a11y-comfortable textarea {
+    min-height: 5.5rem;
+  }
+  .a11y-comfortable th,
+  .a11y-comfortable td {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+}

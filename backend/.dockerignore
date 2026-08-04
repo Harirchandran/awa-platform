@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+# Virtual environments
+.env
+.env.*
+!.env.example
+.venv
+env/
+venv/
+ENV/
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+# Testing
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+.mypy_cache/
+tests/
+# Local env files (secrets)
+.env.local
+.env.production
+.env.*.local
+# Git
+.git/
+.gitignore
+# Docker
+Dockerfile*
+docker-compose*.yml
+.docker/
+# Documentation
+docs/
+*.md
+!README.md
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+*.patch
+*.zip
+*.bak
+AWA_*
+iteration*-evidence
+*diagnostic*.txt
+test-results
+venv
+.codex-venv
+.codex-venv-fresh
+repomix-*.xml
+repomix*.config.json
+repomix*.md
+walkthrough*.md
+db-data
+redis-data
+*.db
+tmp/
+scratch/
+tenants/
+.local-tools/

@@ -1,0 +1,3 @@
+"""
+Knowledge and FAQ Domain.
+"""

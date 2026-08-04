@@ -1,0 +1,126 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+*.keystore
+secrets/
+credentials/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+venv/
+.venv/
+.codex-venv*/
+
+# Node and frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/test-results/
+frontend/playwright-report/
+frontend/ui-audit/
+frontend/chrome-ui-audit-profile/
+
+# Browser and test output
+playwright-report/
+**/playwright-report/
+test-results/
+**/test-results/
+blob-report/
+**/blob-report/
+screenshots/
+**/screenshots/
+traces/
+**/traces/
+
+# Local runtime data
+postgres_data/
+tmp/
+output/
+scratch/
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.log
+*.trace
+*.har
+
+# Generated reports and repository bundles
+repomix*
+*REPOMIX*
+*.diff
+*.patch
+*.zip
+*.tar
+*.gz
+*.7z
+*.bak
+*.backup
+
+# Generic reports, exports, uploads, and artifacts
+reports/
+**/reports/
+uploads/
+**/uploads/
+artifacts/
+**/artifacts/
+evidence/
+**/evidence/
+
+# Repository bundles and generated snapshots
+*.bundle
+*.tgz
+*.rar
+*.xz
+*.bz2
+*.zst
+*.orig
+*.rej
+*.tmp
+*.temp
+*.swp
+*.swo
+*repomix*
+*REPOMIX*
+*snapshot*
+*SNAPSHOT*
+
+# Required tracked source whose name overlaps the broad artifact rules
+!backend/tests/unit/test_runtime_capability_snapshot.py
+
+# Local uploads and runtime media
+media/
+**/media/
+tmp/
+**/tmp/
+
+# Required tracked source whose path overlaps the broad runtime-media rules
+!backend/domains/media/
+!backend/domains/media/__init__.py
+!backend/domains/media/models.py
+!backend/domains/media/repository.py
+!backend/domains/media/service.py
+
+# Local tools and OS/editor files
+.local-tools/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

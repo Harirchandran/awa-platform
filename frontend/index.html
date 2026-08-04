@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AWA, Always Working Assistant - tools for customer chat, bookings, support, and lead capture." />
+    <meta name="theme-color" content="#12121d" />
+    <title>AWA - Always Working Assistant</title>
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('awa_display_preferences');
+          var preferences = raw ? JSON.parse(raw) : { theme: 'dark' };
+          var theme = preferences.theme || 'dark';
+          var dark = theme === 'system'
+            ? window.matchMedia('(prefers-color-scheme: dark)').matches
+            : theme !== 'light';
+          var root = document.documentElement;
+          root.classList.toggle('dark', dark);
+          root.classList.toggle('a11y-high-contrast', Boolean(preferences.highContrast));
+          root.classList.toggle('a11y-text-large', preferences.textScale === 'large');
+          root.classList.toggle('a11y-comfortable', Boolean(preferences.comfortableSpacing));
+          root.classList.toggle('a11y-reduced-motion', Boolean(preferences.reducedMotion));
+          root.dataset.theme = dark ? 'dark' : 'light';
+        } catch (error) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    <!-- Google Fonts preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+  </body>
+</html>

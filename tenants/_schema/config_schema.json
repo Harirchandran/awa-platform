@@ -1,0 +1,222 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "AWA Tenant Configuration",
+    "description": "Canonical JSON Schema for tenant config_json validation. The backend normalizer accepts older shapes, but saved configs should match this contract.",
+    "type": "object",
+    "required": [
+        "business_name",
+        "business_type",
+        "timezone",
+        "default_language",
+        "ai_mode",
+        "working_hours",
+        "modules"
+    ],
+    "properties": {
+        "business_name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Display name of the business"
+        },
+        "business_type": {
+            "type": "string",
+            "enum": [
+                "general",
+                "clinic",
+                "salon",
+                "real_estate",
+                "restaurant",
+                "gym",
+                "spa",
+                "consultancy",
+                "other"
+            ],
+            "description": "Type of business used for module hints and AI behavior"
+        },
+        "timezone": {
+            "type": "string",
+            "pattern": "^[A-Za-z]+/[A-Za-z_]+$|^UTC$",
+            "description": "IANA timezone, for example Asia/Kolkata"
+        },
+        "default_language": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 5,
+            "description": "ISO language code, for example en, hi, or ar"
+        },
+        "ai_mode": {
+            "type": "string",
+            "enum": ["standard", "concierge"],
+            "description": "standard is deterministic-first; concierge enables richer agent behavior"
+        },
+        "ai_tone": {
+            "type": "string"
+        },
+        "greeting_message": {
+            "type": "string"
+        },
+        "fallback_message": {
+            "type": "string"
+        },
+        "escalation_message": {
+            "type": "string"
+        },
+        "modules": {
+            "type": "object",
+            "description": "Tool and workflow module configuration. At least one module should be enabled.",
+            "additionalProperties": {
+                "type": "object",
+                "required": ["enabled", "fields"],
+                "properties": {
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "fields": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["key", "type", "required"],
+                            "properties": {
+                                "key": {
+                                    "type": "string"
+                                },
+                                "label": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "enum": [
+                                        "string",
+                                        "number",
+                                        "date",
+                                        "time",
+                                        "email",
+                                        "phone",
+                                        "select"
+                                    ]
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                },
+                                "options": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                },
+                                "options_from": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": true
+                        }
+                    }
+                },
+                "additionalProperties": true
+            }
+        },
+        "services": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["id", "name", "duration_mins", "required_fields"],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "duration_mins": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "price": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "required_fields": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                    }
+                },
+                "additionalProperties": true
+            }
+        },
+        "working_hours": {
+            "type": "object",
+            "required": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+            "additionalProperties": false,
+            "properties": {
+                "monday": { "$ref": "#/definitions/day_schedule" },
+                "tuesday": { "$ref": "#/definitions/day_schedule" },
+                "wednesday": { "$ref": "#/definitions/day_schedule" },
+                "thursday": { "$ref": "#/definitions/day_schedule" },
+                "friday": { "$ref": "#/definitions/day_schedule" },
+                "saturday": { "$ref": "#/definitions/day_schedule" },
+                "sunday": { "$ref": "#/definitions/day_schedule" }
+            }
+        },
+        "faqs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["question", "answer"],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "question": {
+                        "type": "string"
+                    },
+                    "answer": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": true
+            }
+        },
+        "escalation_phone": {
+            "type": "string"
+        },
+        "escalation_email": {
+            "type": "string"
+        },
+        "custom_instructions": {
+            "type": "string"
+        },
+        "ignored_numbers": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Phone numbers whose messages AWA should silently ignore"
+        },
+        "limits": {
+            "type": "object",
+            "properties": {
+                "monthly_credits": { "type": "integer" },
+                "daily_messages": { "type": "integer" },
+                "max_ai_tokens_per_month": { "type": "integer" }
+            },
+            "additionalProperties": true
+        }
+    },
+    "definitions": {
+        "day_schedule": {
+            "type": "object",
+            "required": ["is_open", "open_time", "close_time"],
+            "properties": {
+                "is_open": {
+                    "type": "boolean"
+                },
+                "open_time": {
+                    "type": "string",
+                    "pattern": "^\\d{2}:\\d{2}$"
+                },
+                "close_time": {
+                    "type": "string",
+                    "pattern": "^\\d{2}:\\d{2}$"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": true
+}

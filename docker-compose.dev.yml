@@ -1,0 +1,28 @@
+services:
+  api:
+    volumes:
+      - ./backend:/app/backend
+
+  worker:
+    volumes:
+      - ./backend:/app/backend
+
+  burst-worker:
+    volumes:
+      - ./backend:/app/backend
+
+  reminder-scheduler:
+    volumes:
+      - ./backend:/app/backend
+
+  event-dispatcher:
+    volumes:
+      - ./backend:/app/backend
+
+  frontend:
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+    ports:
+      - "127.0.0.1:5173:5173"

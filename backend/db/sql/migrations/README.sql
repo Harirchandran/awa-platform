@@ -1,0 +1,4 @@
+-- AWA Migrations Directory
+-- Place numbered migration SQL files here (e.g., 001_add_column.sql)
+-- These are run AFTER supabase_complete.sql (base schema)
+-- Docker-compose mounts this directory into /docker-entrypoint-initdb.d/migrations/

@@ -1,0 +1,21 @@
+{
+  "name": "awa-v1",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "init": "powershell -ExecutionPolicy Bypass -File scripts/dev/init-project.ps1",
+    "dev": "powershell -ExecutionPolicy Bypass -File scripts/dev/start-dev.ps1",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "powershell -Command \"$env:PYTHONPATH=(Get-Location); .\\venv\\Scripts\\python.exe -m uvicorn backend.api.app:app --reload --host 0.0.0.0 --port 8000\"",
+    "build": "npm --prefix frontend run build",
+    "lint": "npm --prefix frontend run lint",
+    "test:backend": "venv\\Scripts\\python.exe -m pytest backend/tests",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "health": "powershell -Command \"Invoke-RestMethod http://localhost:8000/api/v1/health\""
+  },
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.16.0",
+    "playwright": "^1.61.0"
+  }
+}

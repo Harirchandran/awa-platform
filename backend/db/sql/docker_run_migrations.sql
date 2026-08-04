@@ -1,0 +1,54 @@
+\echo 'Running AWA ordered migrations'
+\ir migrations/003_add_consent_fields.sql
+\ir migrations/004_data_retention_policy.sql
+\ir migrations/005_prompt_registry.sql
+\ir migrations/006_ai_mode_toggle.sql
+\ir migrations/007_rag_embeddings.sql
+\ir migrations/008_retention_purge.sql
+\ir migrations/009_billing_schema.sql
+\ir migrations/010_runtime_schema_alignment.sql
+\if :{?AWA_SKIP_DEMO_SEED}
+\echo 'Skipping local mock-user seed migration'
+\else
+\ir migrations/011_seed_local_mock_user.sql
+\endif
+\ir migrations/012_normalize_tenant_config_contract.sql
+\ir migrations/013_plan_usage_tool_limits.sql
+\ir migrations/014_whatsapp_embedded_signup.sql
+\ir migrations/015_public_chat_channel.sql
+\ir migrations/016_order_module.sql
+\ir migrations/017_canonical_billing_plans.sql
+\ir migrations/018_escalation_workflow.sql
+\ir migrations/019_escalation_reply_delivery.sql
+\ir migrations/020_security_hardening.sql
+\ir migrations/021_conversation_sequence_integrity.sql
+\ir migrations/022_production_hardening.sql
+\ir migrations/023_crm_lite.sql
+\ir migrations/024_catalog_inventory.sql
+\ir migrations/024_website_deduplication_constraint.sql
+\ir migrations/025_payment_requests.sql
+\ir migrations/026_reminders_followups.sql
+\ir migrations/027_review_collection.sql
+\ir migrations/028_business_types.sql
+\ir migrations/029_repair_reminders_schema.sql
+\ir migrations/030_prompt_registry_active_dedupe.sql
+\ir migrations/031_tool_catalog.sql
+\ir migrations/032_subscription_plan_price_check.sql
+\ir migrations/033_tenant_invitations.sql
+\ir migrations/034_backend_auth.sql
+\ir migrations/035_leads_schema.sql
+\ir migrations/036_business_events.sql
+\ir migrations/037_media_assets.sql
+\ir migrations/038_booking_concurrency_lock.sql
+\ir migrations/039_privacy_erasure_tombstone.sql
+\ir migrations/040_event_recovery.sql
+\ir migrations/041_drop_booking_lock.sql
+\ir migrations/042_rls_enforcement.sql
+\ir migrations/043_reminders_upgrade.sql
+\ir migrations/044_public_chat_link_resolution_rls_bypass.sql
+\ir migrations/045_business_behavior_presets.sql
+\ir migrations/046_conversation_turn_intake.sql
+\ir migrations/047_session_config_version_authority.sql
+\ir migrations/048_booking_completion_event_idempotency.sql
+\ir migrations/049_review_automation_schema_alignment.sql
+\ir migrations/050_lead_persistence_idempotency.sql
