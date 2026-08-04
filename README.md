@@ -1,15 +1,21 @@
 # AWA — Always Working Assistant
 
-> Open-source release staging repository. Not yet approved for publication.
+> Local open-source preparation repository. Not approved for publication or
+> public production deployment.
 
-AWA is a full-stack, multi-tenant, AI-assisted customer-conversation automation
-platform supporting browser chat and WhatsApp-oriented workflows.
+AWA is being prepared for an open-source release. The project is licensed under
+AGPL-3.0-only, copyright belongs to Hari R Chandran, and community contribution
+files are being established in this staging repository.
 
-This staging snapshot is undergoing security, licensing, documentation, test,
-and community-readiness validation.
+This snapshot is not approved for public production deployment. The final
+technical and academic portfolio documentation will be written in a later
+phase.
 
-Do not deploy this snapshot as a production system.
+Copyright © 2026 Hari R Chandran.
 
-The final project documentation, feature-status matrix, academic context,
-contribution guide, licence, security policy, and portfolio links will be added
-in later reviewed phases.
+Licensed under the GNU Affero General Public License v3.0 only
+(`AGPL-3.0-only`). See `LICENSE`.
+
+AWA was developed with AI-assisted development tools under the author’s
+direction. The author remains responsible for the architecture, requirements,
+review, validation, licensing, and published output.

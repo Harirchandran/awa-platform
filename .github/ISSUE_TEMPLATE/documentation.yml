@@ -1,0 +1,52 @@
+name: Documentation correction
+description: Report inaccurate, unclear, or missing AWA documentation
+title: "[Docs]: Describe the documentation correction"
+labels: []
+body:
+  - type: input
+    id: affected_document
+    attributes:
+      label: Affected document or area
+      description: Provide the repository-relative path or documentation area.
+    validations:
+      required: true
+  - type: textarea
+    id: current_problem
+    attributes:
+      label: Current problem
+      description: Explain what is inaccurate, unclear, or missing.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_correction
+    attributes:
+      label: Proposed correction
+      description: Describe the evidence-based correction.
+    validations:
+      required: true
+  - type: input
+    id: source_code_path
+    attributes:
+      label: Supporting source-code path
+      description: Provide a repository-relative source path that supports the correction, when applicable.
+    validations:
+      required: true
+  - type: dropdown
+    id: public_claims_impact
+    attributes:
+      label: Does the change affect public claims?
+      description: Identify whether the correction changes a public-facing claim.
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+  - type: checkboxes
+    id: verification_checklist
+    attributes:
+      label: Factual verification
+      options:
+        - label: I verified the proposed correction against repository evidence.
+          required: true
+    validations:
+      required: true

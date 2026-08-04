@@ -1,0 +1,61 @@
+name: Feature request
+description: Propose an evidence-based improvement to AWA
+title: "[Feature]: Describe the desired outcome"
+labels: []
+body:
+  - type: textarea
+    id: problem_or_use_case
+    attributes:
+      label: Problem or use case
+      description: Describe the user or developer problem without assuming a specific solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_outcome
+    attributes:
+      label: Proposed outcome
+      description: Describe the result you want; submission does not promise implementation.
+    validations:
+      required: true
+  - type: input
+    id: affected_component
+    attributes:
+      label: Affected component
+      description: Identify the relevant backend, frontend, provider, deployment, or documentation area.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives_considered
+    attributes:
+      label: Alternatives considered
+      description: Explain workarounds or alternative designs you evaluated.
+    validations:
+      required: true
+  - type: textarea
+    id: security_privacy_impact
+    attributes:
+      label: Tenancy, security, and privacy impact
+      description: Explain effects on isolation, access control, data handling, and privacy.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility_impact
+    attributes:
+      label: Backward-compatibility impact
+      description: Identify possible API, configuration, data, or workflow compatibility effects.
+    validations:
+      required: true
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add supporting, non-sensitive context.
+  - type: checkboxes
+    id: submission_checklist
+    attributes:
+      label: Submission checklist
+      options:
+        - label: This request is not a vulnerability report.
+          required: true
+    validations:
+      required: true

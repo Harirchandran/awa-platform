@@ -1,0 +1,83 @@
+name: Bug report
+description: Report a reproducible problem in AWA
+title: "[Bug]: Describe the problem clearly"
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Security vulnerabilities must not be reported publicly. Follow SECURITY.md.
+  - type: textarea
+    id: problem_description
+    attributes:
+      label: Problem description
+      description: Describe the problem and its impact.
+    validations:
+      required: true
+  - type: input
+    id: affected_version
+    attributes:
+      label: Affected commit or version
+      description: Provide the commit SHA, branch state, or release identifier.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Describe the relevant operating system, runtime, browser, and configuration without secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest reliable sequence that reproduces the problem.
+      placeholder: |
+        1. Configure ...
+        2. Run ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+      description: Explain what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual behavior
+      description: Explain what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: redacted_logs
+    attributes:
+      label: Relevant redacted logs
+      description: Include only synthetic or fully redacted logs, traces, or screenshots.
+      render: shell
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add any other relevant, non-sensitive context.
+  - type: checkboxes
+    id: submission_checklist
+    attributes:
+      label: Submission checklist
+      options:
+        - label: I searched existing issues for duplicates.
+          required: true
+        - label: I removed all secrets and credentials.
+          required: true
+        - label: I removed all personal and customer data.
+          required: true
+        - label: Any screenshots are synthetic and reviewed.
+          required: true
+        - label: I reviewed the security-reporting guidance in SECURITY.md.
+          required: true
+    validations:
+      required: true
