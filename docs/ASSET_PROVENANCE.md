@@ -14,16 +14,16 @@ This document records the origin evidence, privacy classification, and publicati
 
 ## Reviewed Documentation Assets
 
-All six files exist and first appear together in the sanitized baseline commit. The current README identifies the interface captures as synthetic demonstrations and the architecture material as explanatory documentation. Git history does not include source files, generation commands, licence annotations, or a conclusive creation record for any PNG. Accordingly, each remains **Provenance not fully established — author confirmation required**.
+All six files exist and first appear together in the sanitized baseline commit. The current README identifies the interface captures as synthetic demonstrations and the architecture material as explanatory documentation. On 2026-08-05, Hari R Chandran confirmed that all six files were created by him or generated under his direction specifically for AWA, contain synthetic demonstration data, and may be publicly distributed with the project. The exact creation method cannot be distinguished from the available records, so each is classified as **Project-authored or generated under author direction**. This confirmation does not imply institutional ownership or endorsement.
 
 | Asset | Classification | Origin evidence | Data classification | Publication status | Notes |
 |---|---|---|---|---|---|
-| `docs/assets/software-architecture.png` | Provenance not fully established — author confirmation required | Project-specific architecture content; added in sanitized baseline; no generator/source record | Technical diagram; no customer, payment, contact, tenant, credential, or personal data | Approved after author confirmation | Confirm that it was project-authored or generated under the author’s direction and is publishable. |
-| `docs/assets/whatsapp-message-sequence.png` | Provenance not fully established — author confirmation required | Project-specific message-flow content; added in sanitized baseline; no generator/source record | Technical diagram; no customer, payment, contact, tenant, credential, or personal data | Approved after author confirmation | Confirm that it was project-authored or generated under the author’s direction and is publishable. |
-| `docs/assets/system-components.png` | Provenance not fully established — author confirmation required | Project-specific component diagram; added in sanitized baseline; no generator/source record | Technical diagram using synthetic system labels; no private data | Approved after author confirmation | Confirm that it was project-authored or generated under the author’s direction and is publishable. |
-| `docs/assets/tenant-dashboard-demo.png` | Provenance not fully established — author confirmation required | Repository-described synthetic local demonstration capture; added in sanitized baseline | Synthetic demonstration data; no actual customer, payment, contact, tenant, credential, or personal data | Approved after author confirmation | Not evidence of a public production deployment. Confirm capture ownership and publication permission. |
-| `docs/assets/public-chat-demo.png` | Provenance not fully established — author confirmation required | Repository-described synthetic local demonstration capture; added in sanitized baseline | Synthetic demonstration data; no actual customer, payment, contact, tenant, credential, or personal data | Approved after author confirmation | Not evidence of a public production deployment. Confirm capture ownership and publication permission. |
-| `docs/assets/audit-logs-demo.png` | Provenance not fully established — author confirmation required | Repository-described synthetic local demonstration capture; added in sanitized baseline | Synthetic demonstration data; no actual customer, payment, contact, tenant, credential, or personal data | Approved after author confirmation | Not evidence of a public production deployment. Confirm capture ownership and publication permission. |
+| `docs/assets/software-architecture.png` | Project-authored or generated under author direction | Author confirmation received 2026-08-05; project-specific architecture content added in sanitized baseline | Technical diagram; no customer, payment, contact, tenant, credential, or personal data | Approved for publication | Confirmed as created for AWA and publicly distributable with the project. |
+| `docs/assets/whatsapp-message-sequence.png` | Project-authored or generated under author direction | Author confirmation received 2026-08-05; project-specific message-flow content added in sanitized baseline | Technical diagram; no customer, payment, contact, tenant, credential, or personal data | Approved for publication | Confirmed as created for AWA and publicly distributable with the project. |
+| `docs/assets/system-components.png` | Project-authored or generated under author direction | Author confirmation received 2026-08-05; project-specific component diagram added in sanitized baseline | Technical diagram using synthetic system labels; no private data | Approved for publication | Confirmed as created for AWA and publicly distributable with the project. |
+| `docs/assets/tenant-dashboard-demo.png` | Project-authored or generated under author direction | Author confirmation received 2026-08-05; repository-described synthetic local demonstration capture | Synthetic demonstration data; no actual customer, payment, contact, tenant, credential, or personal data | Approved for publication | Not evidence of a public production deployment; confirmed as publicly distributable with AWA. |
+| `docs/assets/public-chat-demo.png` | Project-authored or generated under author direction | Author confirmation received 2026-08-05; repository-described synthetic local demonstration capture | Synthetic demonstration data; no actual customer, payment, contact, tenant, credential, or personal data | Approved for publication | Not evidence of a public production deployment; confirmed as publicly distributable with AWA. |
+| `docs/assets/audit-logs-demo.png` | Project-authored or generated under author direction | Author confirmation received 2026-08-05; repository-described synthetic local demonstration capture | Synthetic demonstration data; no actual customer, payment, contact, tenant, credential, or personal data | Approved for publication | Not evidence of a public production deployment; confirmed as publicly distributable with AWA. |
 
 No embedded image metadata was detected during validation.
 
@@ -31,10 +31,10 @@ No embedded image metadata was detected during validation.
 
 | Asset | Classification | Origin evidence | Data classification | Publication status | Notes |
 |---|---|---|---|---|---|
-| `frontend/public/favicon.svg` | Provenance not fully established — replace or confirm before publication | Single compressed SVG with no comment, author, licence, or source metadata; its lightning-mark structure suggests an unidentified template/tool origin | No personal or private data | Replace before publication | Do not infer an icon source. Retain only if the author records the exact origin and redistribution basis. |
-| `frontend/public/icons.svg` | Derived or adapted; provenance not fully established — replace or confirm before publication | SVG sprite names several third-party platform brands plus generic symbols, but contains no source, author, licence, or attribution comments | No personal or private data | Replace before publication | Record the exact source and licence for every retained glyph, or replace the sprite with documented assets. |
+| `frontend/public/favicon.svg` | Project-authored | Original AWA monogram created from basic SVG geometry during open-source publication preparation; no third-party source used | No personal or private data | Approved for publication | No external licence or attribution required. |
+| `frontend/public/icons.svg` | Project-authored | Original generic AWA interface-icon sprite created from basic SVG geometry during open-source publication preparation; no third-party source used | No personal or private data | Approved for publication | No external licence or attribution required. |
 
-Repository history shows both SVGs arriving in the sanitized baseline and supplies no earlier provenance. No reliable origin evidence establishes either as project-authored.
+These publication-preparation replacements supersede the earlier SVG files of uncertain provenance. They contain no retained third-party paths, brand marks, or provider logos.
 
 ## Dependency-Provided Visual Assets
 
@@ -46,9 +46,9 @@ The six reviewed documentation images contain synthetic demonstration data or te
 
 ## Publication Decision
 
-- **Approved for publication:** no tracked asset is placed in this category while creation provenance remains unresolved.
-- **Approved after author confirmation:** the six documentation PNGs, after the author confirms their creation provenance and publication rights.
-- **Replace before publication:** `frontend/public/favicon.svg` and `frontend/public/icons.svg`, unless exact source and redistribution evidence is recorded before publication.
+- **Approved for publication:** the six author-confirmed documentation PNGs and the two project-authored replacement SVGs.
+- **Approved after author confirmation:** none; the required confirmation was received on 2026-08-05.
+- **Replace before publication:** none; both SVGs of uncertain provenance were replaced during publication preparation.
 - **Exclude from publication:** none based on the reviewed repository evidence.
 
 No asset with unresolved external ownership is marked fully approved.

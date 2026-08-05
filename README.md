@@ -340,8 +340,8 @@ The screenshots below contain synthetic demonstration data and do not represent 
 The repository does not yet have a public remote. Replace both placeholders after a public repository exists:
 
 ```powershell
-git clone <repository-url>
-cd <repository-directory>
+git clone https://github.com/Harirchandran/awa-platform.git
+cd awa-platform
 Copy-Item .env.example .env
 ```
 
