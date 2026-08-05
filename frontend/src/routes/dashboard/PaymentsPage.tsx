@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import toast from 'react-hot-toast';
 import { useCustomersList } from '@/features/customers/api';
 import { useOrdersList, formatMoney } from '@/features/orders/api';

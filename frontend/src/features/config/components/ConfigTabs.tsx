@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, type SyntheticEvent } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { useForm, FormProvider, useWatch } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTenantStore } from '@/stores/tenant.store';

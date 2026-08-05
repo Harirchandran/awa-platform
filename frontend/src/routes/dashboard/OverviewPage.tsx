@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useCostMetrics } from '@/features/overview/api';
 import { CostChart } from '@/features/overview/components/CostChart';
 import { useBillingStatus } from '@/features/billing/api';

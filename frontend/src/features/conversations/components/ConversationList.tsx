@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { useConversationsList } from '../api';
 import type { Conversation } from '../api';
 import { getConversationAiModeLabel, getConversationChannelLabel } from '../display';

@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router';
 import { useSession } from '@/features/auth/hooks';
 import { AwaSplash } from '@/components/brand/AwaSplash';
 export function ProtectedRoute() {

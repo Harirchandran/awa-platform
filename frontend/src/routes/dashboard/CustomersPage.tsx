@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { useCustomersList } from '@/features/customers/api';
 import { CustomersTable } from '@/features/customers/components/CustomersTable';
 import { Input } from '@/components/ui/input';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch, type Path } from 'react-hook-form';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { useTenantTools } from '@/features/tools/api';
 import type { TenantConfig } from '@/types/config.types';
 import { Label } from '@/components/ui/label';

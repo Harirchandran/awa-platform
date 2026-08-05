@@ -1,6 +1,7 @@
 import pytest
 from uuid import uuid4
 import json
+from datetime import date, datetime, timedelta
 
 from backend.api.dependencies import get_current_user
 from backend.api.app import app
@@ -8,6 +9,7 @@ from backend.db.client import db_client
 from backend.pipeline.worker import process_message
 from backend.pipeline.session_manager import session_manager
 from backend.core.states import ConversationState
+from backend.modules.booking_module import booking_module
 
 pytestmark = pytest.mark.anyio
 
@@ -199,9 +201,20 @@ async def test_lead_capture_flow(api_client, tenant_factory, mock_redis_globally
 
 
 async def test_configured_booking_fields_persist_through_public_chat_worker(
-    api_client, tenant_factory, mock_redis_globally, mock_llm_globally,
+    api_client, tenant_factory, mock_redis_globally, mock_llm_globally, monkeypatch,
 ):
     """Real API/intake/worker/session path for one-field configured booking collection."""
+    controlled_today = date(2026, 7, 14)
+    visit_date_value = (controlled_today + timedelta(days=6)).isoformat()
+
+    class FrozenDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            value = cls.combine(controlled_today, datetime.min.time()).replace(hour=9)
+            return value.replace(tzinfo=tz) if tz is not None else value
+
+    monkeypatch.setattr("backend.modules.booking_module.datetime", FrozenDateTime)
+    monkeypatch.setattr(booking_module, "_tenant_today", lambda _: controlled_today)
     tenant_info = await tenant_factory(name="Configured Booking Clinic", plan_code="enterprise")
     tenant_id, user_id = tenant_info["tenant_id"], tenant_info["user_id"]
     config = tenant_info["config_data"]
@@ -257,11 +270,11 @@ async def test_configured_booking_fields_persist_through_public_chat_worker(
         assert "visit_date" not in name.state.get_task_step_data("booking")
         assert name.state.prompt_focus.requested_fields == ["visit_date"]
 
-        visit_date = await customer_turn("2026-07-20")
+        visit_date = await customer_turn(visit_date_value)
         assert visit_date.state.get_task_step_data("booking")["service_name"] == "Retest Consultation"
         assert visit_date.state.get_task_step_data("booking")["service_id"] == "retest"
         assert visit_date.state.get_task_step_data("booking")["guest_display_name"] == "Alex"
-        assert visit_date.state.get_task_step_data("booking")["visit_date"] == "2026-07-20"
+        assert visit_date.state.get_task_step_data("booking")["visit_date"] == visit_date_value
         assert "visit_time" not in visit_date.state.get_task_step_data("booking")
         assert visit_date.state.prompt_focus.requested_fields == ["visit_time"]
 
@@ -269,7 +282,7 @@ async def test_configured_booking_fields_persist_through_public_chat_worker(
         # temporal final field is accepted.
         await session_manager.invalidate_cache(tenant_id, conversation_id)
         rehydrated = await session_manager.get_or_create_session(tenant_id, conversation_id)
-        assert rehydrated.state.get_task_step_data("booking")["visit_date"] == "2026-07-20"
+        assert rehydrated.state.get_task_step_data("booking")["visit_date"] == visit_date_value
 
         visit_time = await customer_turn("10:00")
         assert visit_time.state.get_task_step_data("booking")["visit_time"] == "10:00"
@@ -279,7 +292,7 @@ async def test_configured_booking_fields_persist_through_public_chat_worker(
             "service_id": "retest",
             "service_name": "Retest Consultation",
             "guest_display_name": "Alex",
-            "visit_date": "2026-07-20",
+            "visit_date": visit_date_value,
             "visit_time": "10:00",
         }
         assert "Retest Consultation" in visit_time.state.action_ledger.pending_action.summary

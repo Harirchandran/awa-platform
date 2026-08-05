@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { ListChecks, MessageSquare, Send } from 'lucide-react';
 import { useConversationMessages } from '../api';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';

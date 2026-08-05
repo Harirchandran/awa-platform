@@ -18,10 +18,17 @@ async function setupApiIntercepts(context: BrowserContext) {
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
-        access_token: 'mock_token:tenant_admin',
-        dev_session_token: 'mock_token:tenant_admin',
-        tenant_id: 'tenant-1',
-        role: 'tenant_admin',
+        data: {
+          access_token: 'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAxMDEiLCJlbWFpbCI6InN5bnRoZXRpYy1lMmVAZXhhbXBsZS5pbnZhbGlkIiwiZXhwIjo0MTAyNDQ0ODAwfQ.synthetic',
+          refresh_token: 'synthetic-e2e-refresh-token',
+          user_id: '00000000-0000-0000-0000-000000000101',
+          tenant_id: '00000000-0000-0000-0000-000000000201',
+          role: 'tenant_admin',
+        },
+        error: null,
+        meta: null,
+        timestamp: new Date().toISOString(),
+        request_id: 'req-mock-login-e2e',
       }),
     });
   });
@@ -1060,7 +1067,7 @@ async function setupPublicChatProcessingScenario(page: Page) {
   });
 
   await page.goto('/chat/processing-test');
-  await expect(page.getByText('Verify phone to confirm')).toBeVisible();
+  await expect(page.getByText('Verify your phone once for this chat session')).toBeVisible();
   await expect(page.getByLabel('Type your message')).toBeDisabled();
   await expect.poll(() => Boolean(releaseSse)).toBe(true);
   return {
@@ -1102,7 +1109,7 @@ async function emitProcessingResult(
 test('public chat successful processing closes verification and clears the processing lock', async ({ page }) => {
   const scenario = await setupPublicChatProcessingScenario(page);
   await emitProcessingResult(page, scenario, 'completed', '2026-07-14T01:01:00.000Z');
-  await expect(page.getByText('Verify phone to confirm')).toBeHidden();
+  await expect(page.getByText('Verify your phone once for this chat session')).toBeHidden();
   await expect(page.getByLabel('Type your message')).toBeEnabled();
 });
 
@@ -1114,7 +1121,7 @@ test('public chat recoverable processing failure unlocks a fresh confirmation pa
   });
   const scenario = await setupPublicChatProcessingScenario(page);
   await emitProcessingResult(page, scenario, 'failed', '2026-07-14T01:02:00.000Z', true);
-  await expect(page.getByText('Verify phone to confirm')).toBeHidden();
+  await expect(page.getByText('Verify your phone once for this chat session')).toBeHidden();
   await expect(page.getByText('That request was not completed. You can confirm again, change a detail, or cancel.')).toBeVisible();
   await expect(page.getByLabel('Type your message')).toBeEnabled();
   expect(otpRequests).toBe(0);
@@ -1123,7 +1130,7 @@ test('public chat recoverable processing failure unlocks a fresh confirmation pa
 test('public chat terminal failure closes stale verification without automatic retry', async ({ page }) => {
   const scenario = await setupPublicChatProcessingScenario(page);
   await emitProcessingResult(page, scenario, 'terminal_failed', '2026-07-14T01:03:00.000Z');
-  await expect(page.getByText('Verify phone to confirm')).toBeHidden();
+  await expect(page.getByText('Verify your phone once for this chat session')).toBeHidden();
   await expect(page.getByText('That verification or request can no longer be used. Please change or cancel it, or start a fresh confirmation.')).toBeVisible();
   await expect(page.getByLabel('Type your message')).toBeEnabled();
 });

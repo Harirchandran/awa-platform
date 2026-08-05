@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router';
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AdminSidebar } from './AdminSidebar';

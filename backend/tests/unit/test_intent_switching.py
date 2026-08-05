@@ -6,8 +6,15 @@ from backend.core.context import SafeError, PendingAction
 from backend.logic.engine.core import agentic_engine
 from backend.logic.engine.pending_decision import PendingActionDecision
 from backend.tests.unit.test_conversation_ux import make_context, install_agent_test_doubles, FakeToolCallingLLM
+from backend.core.redis_client import close_redis_clients, reset_redis_clients
 
 pytestmark = pytest.mark.anyio
+
+@pytest.fixture(autouse=True)
+async def isolate_cached_redis_clients():
+    reset_redis_clients()
+    yield
+    await close_redis_clients()
 
 async def test_active_booking_price_question_does_not_clear_booking_context(monkeypatch):
     # Setup context with active booking error and booking as current task

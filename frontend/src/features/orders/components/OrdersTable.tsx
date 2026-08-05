@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { CheckCircle2, Clock3, Loader2, PackageCheck, ReceiptText, Settings, ShoppingBag, XCircle } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { formatMoney, useOrderDetail, useUpdateOrder, type Order, type OrderStatus, type PaymentStatus } from '../api';

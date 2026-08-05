@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTenantsList, useCreateTenant, useAdminBusinessTypes, impersonateTenant, toggleTenantStatus, usePlatformMetrics } from '@/features/tenants/api';
 import type { CreateTenantPayload, CreateTenantResult, TenantRecord } from '@/features/tenants/api';

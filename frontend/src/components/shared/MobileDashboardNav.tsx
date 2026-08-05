@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { LayoutDashboard, MessageSquare, Briefcase, MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTenantTools } from '@/features/tools/api';

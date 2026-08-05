@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { ComponentType } from 'react';
 import { cn } from '@/lib/utils';
 import { StatusBadge } from './StatusBadge';

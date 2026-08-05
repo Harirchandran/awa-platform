@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router';
 import { useCurrentUser } from '@/features/auth/hooks';
 import { AwaSplash } from '@/components/brand/AwaSplash';
 import { getRoleHome, hasAllowedRole, type UserRole } from '@/features/auth/roles';

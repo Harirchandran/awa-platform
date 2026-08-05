@@ -3,7 +3,6 @@
 services:
   # ==================== DATABASE ====================
   postgres:
-    container_name: awa-postgres
     image: pgvector/pgvector:pg16
     restart: unless-stopped
     ports:
@@ -26,7 +25,6 @@ services:
 
   # ==================== REDIS ====================
   redis:
-    container_name: awa-redis
     image: redis:7.2-alpine
     restart: unless-stopped
     ports:
@@ -47,7 +45,6 @@ services:
 
   # ==================== BACKEND API ====================
   api:
-    container_name: awa-api
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -134,7 +131,6 @@ services:
 
   # ==================== WORKER ====================
   worker:
-    # container_name: awa-worker
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -214,7 +210,6 @@ services:
 
   # ==================== BURST WORKER (Phase 9c) ====================
   burst-worker:
-    container_name: awa-burst-worker
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -254,7 +249,6 @@ services:
 
   # ==================== REMINDER SCHEDULER ====================
   reminder-scheduler:
-    container_name: awa-reminder-scheduler
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -300,7 +294,6 @@ services:
 
   # ==================== EVENT DISPATCHER ====================
   event-dispatcher:
-    container_name: awa-event-dispatcher
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -335,7 +328,6 @@ services:
 
   # ==================== FRONTEND ====================
   frontend:
-    container_name: awa-frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile

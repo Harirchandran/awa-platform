@@ -169,7 +169,7 @@ def _provider_health_snapshot() -> dict:
         "llm": {
             "routing_provider": settings.ROUTING_LLM_PROVIDER,
             "agent_provider": settings.AGENT_LLM_PROVIDER,
-            "status": "configured" if _configured(settings.GROQ_API_KEY or settings.OPENAI_API_KEY or settings.ANTHROPIC_API_KEY or settings.GEMINI_API_KEY) else "blocked",
+            "status": "configured" if _configured(settings.GROQ_API_KEY or settings.OPENAI_API_KEY or settings.GEMINI_API_KEY) else "blocked",
         },
     }
 async def _collect_health_snapshot(include_errors: bool = False) -> dict:

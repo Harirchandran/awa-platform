@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { UserCheck } from 'lucide-react';
 import { AwaSplash } from '@/components/brand/AwaSplash';
 import {

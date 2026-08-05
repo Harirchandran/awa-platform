@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { format, formatDistanceToNow } from 'date-fns';
 import { AlertTriangle, CheckCircle2, Clock3, LifeBuoy, MessageSquare, RefreshCcw, Send } from 'lucide-react';
 import { toast } from 'react-hot-toast';

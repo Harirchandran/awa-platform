@@ -96,9 +96,11 @@ def reset_db_pool_between_tests():
     from backend.pipeline.burst_buffer import burst_buffer
     from backend.observability import provider_rate_limiter
     from backend.realtime import public_chat_events
+    from backend.core.redis_client import reset_redis_clients
     import redis.asyncio as aioredis
     from backend.core.config import settings
 
+    reset_redis_clients()
     provider_rate_limiter._redis_client = None
     public_chat_events._redis_client = None
     session_manager.redis = aioredis.from_url(settings.REDIS_URL, decode_responses=True)
@@ -108,6 +110,7 @@ def reset_db_pool_between_tests():
 
     app.dependency_overrides.clear()
     db_client._pool = None
+    reset_redis_clients()
     provider_rate_limiter._redis_client = None
     public_chat_events._redis_client = None
     session_manager.redis = aioredis.from_url(settings.REDIS_URL, decode_responses=True)

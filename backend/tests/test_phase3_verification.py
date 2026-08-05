@@ -8,6 +8,7 @@ from fastapi import HTTPException
 from backend.db.client import db_client
 from backend.logic.engine.history import sanitize_agentic_history_dicts
 from backend.observability.provider_rate_limiter import refund_provider_capacity, get_redis_client
+from backend.core.config import settings
 from backend.api.routes.knowledge import _extract_upload_text
 from fastapi import UploadFile
 from io import BytesIO
@@ -161,7 +162,10 @@ async def test_inventory_bypass_stock_decrement():
         )
 
 
-async def test_webhook_payment_failed_does_not_suspend_tenant():
+async def test_webhook_payment_failed_does_not_suspend_tenant(monkeypatch):
+    monkeypatch.setattr(settings, "BILLING_MODE", "mock")
+    monkeypatch.setattr(settings, "ENABLE_MOCK_BILLING", True)
+
     # Seed tenant
     tenant_id = uuid4()
     sub_id = f"sub_{uuid4().hex[:8]}"
@@ -233,7 +237,8 @@ async def test_pdf_dos_protection_rejects_large_pages():
         pass
 
 
-async def test_capacity_refund():
+async def test_capacity_refund(monkeypatch):
+    monkeypatch.setattr(settings, "ENABLE_PROVIDER_RATE_LIMITER", True)
     redis_client = await get_redis_client()
     if redis_client:
         tenant_id = str(uuid4())

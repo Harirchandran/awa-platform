@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { ConversationList } from '@/features/conversations/components/ConversationList';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SearchInputWithClear } from '@/components/shared/SearchInputWithClear';

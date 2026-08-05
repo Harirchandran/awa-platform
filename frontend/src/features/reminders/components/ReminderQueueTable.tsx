@@ -1,5 +1,5 @@
 import { AlertTriangle, BellRing, Loader2, Plus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import {
   Table,

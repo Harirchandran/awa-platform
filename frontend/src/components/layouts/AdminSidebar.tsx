@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { useCurrentUser } from '@/features/auth/hooks';
 import { authClient } from '@/lib/auth';
 import { clearDevMockToken, getDevMockToken } from '@/lib/dev-auth';

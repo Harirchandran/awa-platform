@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useState } from 'react';
 import { ArrowRight, Lock, Settings2 } from 'lucide-react';
 import { safeDashboardHref, toolIcon } from '@/features/tools/catalog';

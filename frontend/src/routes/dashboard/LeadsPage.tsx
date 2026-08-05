@@ -27,7 +27,7 @@ import { AlertTriangle, Loader2, Megaphone, ArrowRight, UserCheck, PhoneCall, XC
 import { getApiErrorMessage } from '@/lib/api-errors';
 import { ResponsiveDataList } from '@/components/shared/ResponsiveDataList';
 import { PageHeader } from '@/components/shared/PageHeader';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router';
 import { SearchInputWithClear } from '@/components/shared/SearchInputWithClear';
 import { useTenantTools } from '@/features/tools/api';
 import { getModuleEntitlement } from '@/features/tools/entitlements';
