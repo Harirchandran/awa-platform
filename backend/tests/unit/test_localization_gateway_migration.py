@@ -313,6 +313,7 @@ def test_allowlisted_semantic_and_core_migrations_are_only_active_gateway_caller
     for path in logic_root.rglob("*.py"):
         if any(name.startswith("backend.ai.gateway") for name in _imports(path)):
             gateway_importers.append(path.relative_to(ROOT).as_posix())
+    gateway_importers.sort()
     assert gateway_importers == [
         "backend/logic/engine/core_agent_gateway.py",
         # Approved Iteration 2 dynamic configured-turn semantic contract:
